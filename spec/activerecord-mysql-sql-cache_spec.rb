@@ -1,45 +1,45 @@
-require 'mysql2'
 require 'active_record'
-require 'active_record/connection_adapters/mysql2_adapter'
 require 'activerecord-mysql-sql-cache'
 
-module Mysql2
-  class Client
-    def initialize(opts={})
-      @query_options = @@default_query_options.dup.merge opts
-    end
-  end
-end
+def initialize_database
+  db_url = ENV['DATABASE_URL'] || 'mysql2://root@0.0.0.0/ar_test'
+  ActiveRecord::Base.establish_connection db_url
+  con = ActiveRecord::Base.connection
 
-ActiveRecord::ConnectionAdapters::Mysql2Adapter.class_eval do
-  def quote_string(string)
-    string
-  end
-  def configure_connection
-  end
-end
+  con.execute 'DROP TABLE IF EXISTS products'
+  con.execute <<-DDL
+CREATE TABLE products (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  user_id INT
+)
+  DDL
+  con.execute 'DROP TABLE IF EXISTS users'
+  con.execute <<-DDL
+CREATE TABLE users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL
+)
+  DDL
 
-Arel::Visitors::ToSql.class_eval do
-  def column_for o
-    nil
-  end
-end
-
-ActiveRecord::Relation.class_eval do
-  def build_select(arel)
-    if select_values.any?
-      nil
-    else
-      arel.project(@klass.arel_table[Arel.star])
-    end
-  end
+  alice = User.create name: 'alice'
+  Product.new name: 'chocolate', user: alice
+  Product.new name: 'cookie', user: alice
 end
 
 class Product < ActiveRecord::Base
-  establish_connection 'mysql2://user@host/db'
+  belongs_to :user
+end
+
+class User < ActiveRecord::Base
+  has_many :products
 end
 
 describe 'ActiveRecord MySQL SQL_CACHE support' do
+  before(:all) do
+    initialize_database
+  end
+
   context 'with AR::Relation' do
     let(:rel) { Product.limit(1) }
 
