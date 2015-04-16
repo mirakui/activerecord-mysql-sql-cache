@@ -50,9 +50,12 @@ describe 'ActiveRecord MySQL SQL_CACHE support' do
     it { expect(rel.sql_cache(false).to_sql).to be_sql_like("SELECT SQL_NO_CACHE `products`.* FROM `products` LIMIT 1") }
     it { expect(rel.sql_no_cache.to_sql).to     be_sql_like("SELECT SQL_NO_CACHE `products`.* FROM `products` LIMIT 1") }
 
-    #it { expect(rel.sql_cache.count.to_sql).to  be_sql_like("SELECT SQL_CACHE COUNT(*) FROM `products`") }
     it { expect(rel.distinct.select(:name).sql_cache.to_sql
                ).to be_sql_like("SELECT DISTINCT SQL_CACHE `products`.`name` FROM `products` LIMIT 1") }
+    it do
+      rel.sql_cache.count
+      expect(ActiveRecord::Base.connection).to have_receive(:execute).with("SELECT SQL_CACHE COUNT(*) FROM `products`")
+    end
   end
 
   context 'with AR::Base' do
