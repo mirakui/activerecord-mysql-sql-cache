@@ -1,9 +1,35 @@
 require 'active_record'
 require 'activerecord-mysql-sql-cache'
+require 'arproxy'
+
+class LastQueryLogger < Arproxy::Base
+  def execute(sql, name=nil)
+    Thread.current[:last_query] = sql
+    super
+  end
+end
+
+class Product < ActiveRecord::Base
+  belongs_to :user
+end
+
+class User < ActiveRecord::Base
+  has_many :products
+end
 
 def initialize_database
   db_url = ENV['DATABASE_URL'] || 'mysql2://root@0.0.0.0/ar_test'
+
+  ActiveRecord::Base.logger = Logger.new('log/test.log')
   ActiveRecord::Base.establish_connection db_url
+
+  Arproxy.configure do |config|
+    config.adapter = "mysql2"
+    config.logger = ActiveRecord::Base.logger
+    config.use LastQueryLogger
+  end
+  Arproxy.enable!
+
   con = ActiveRecord::Base.connection
 
   con.execute 'DROP TABLE IF EXISTS products'
@@ -27,14 +53,6 @@ CREATE TABLE users (
   Product.new name: 'cookie', user: alice
 end
 
-class Product < ActiveRecord::Base
-  belongs_to :user
-end
-
-class User < ActiveRecord::Base
-  has_many :products
-end
-
 describe 'ActiveRecord MySQL SQL_CACHE support' do
   before(:all) do
     initialize_database
@@ -53,8 +71,8 @@ describe 'ActiveRecord MySQL SQL_CACHE support' do
     it { expect(rel.distinct.select(:name).sql_cache.to_sql
                ).to be_sql_like("SELECT DISTINCT SQL_CACHE `products`.`name` FROM `products` LIMIT 1") }
     it do
-      rel.sql_cache.count
-      expect(ActiveRecord::Base.connection).to have_receive(:execute).with("SELECT SQL_CACHE COUNT(*) FROM `products`")
+      Product.all.sql_cache.count
+      expect(Thread.current[:last_query]).to be_sql_like("SELECT SQL_CACHE  COUNT(*) FROM `products`")
     end
   end
 
