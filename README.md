@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mirakui/activerecord-mysql-sql-cache.svg)](https://travis-ci.org/mirakui/activerecord-mysql-sql-cache)
+
 # Activerecord::Mysql::Sql::Cache
 
 TODO: Write a gem description
