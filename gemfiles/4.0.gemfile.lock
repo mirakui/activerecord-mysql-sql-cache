@@ -1,0 +1,72 @@
+PATH
+  remote: ../
+  specs:
+    activerecord-mysql-sql-cache (0.0.1)
+      activerecord (>= 3.2)
+      arel (>= 3.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (4.0.13)
+      activesupport (= 4.0.13)
+      builder (~> 3.1.0)
+    activerecord (4.0.13)
+      activemodel (= 4.0.13)
+      activerecord-deprecated_finders (~> 1.0.2)
+      activesupport (= 4.0.13)
+      arel (~> 4.0.0)
+    activerecord-deprecated_finders (1.0.4)
+    activesupport (4.0.13)
+      i18n (~> 0.6, >= 0.6.9)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    appraisal (2.0.1)
+      activesupport (>= 3.2.21)
+      bundler
+      rake
+      thor (>= 0.14.0)
+    arel (4.0.2)
+    arproxy (0.1.3)
+      activerecord (>= 3.0.0)
+    builder (3.1.4)
+    diff-lcs (1.2.5)
+    foreman (0.78.0)
+      thor (~> 0.19.1)
+    i18n (0.7.0)
+    minitest (4.7.5)
+    multi_json (1.11.0)
+    mysql2 (0.3.18)
+    rake (10.4.2)
+    rspec (3.2.0)
+      rspec-core (~> 3.2.0)
+      rspec-expectations (~> 3.2.0)
+      rspec-mocks (~> 3.2.0)
+    rspec-core (3.2.3)
+      rspec-support (~> 3.2.0)
+    rspec-expectations (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-mocks (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-support (3.2.2)
+    thor (0.19.1)
+    thread_safe (0.3.5)
+    tzinfo (0.3.43)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activerecord (~> 4.0.0)
+  activerecord-mysql-sql-cache!
+  appraisal
+  arproxy
+  bundler (~> 1.7)
+  foreman
+  mysql2
+  rake (~> 10.0)
+  rspec
