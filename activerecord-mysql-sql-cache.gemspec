@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = ActiverecordMysqlSqlCache::VERSION
   spec.authors       = ["Issei Naruta"]
   spec.email         = ["naruta@cookpad.com"]
-  spec.summary       = %q{An ActiveRecord extension for enabling SQL\_CACHE and SQL\_NO\_CACHE in MySQL queries}
+  spec.summary       = %q{An ActiveRecord extension for enabling SQL_CACHE and SQL_NO_CACHE in MySQL queries}
   spec.homepage      = "https://github.com/mirakui/activerecord-mysql-sql-cache"
   spec.license       = "MIT"
 
