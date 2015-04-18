@@ -1,8 +1,15 @@
 [![Build Status](https://travis-ci.org/mirakui/activerecord-mysql-sql-cache.svg)](https://travis-ci.org/mirakui/activerecord-mysql-sql-cache)
 
-# Activerecord::Mysql::Sql::Cache
+# activerecord-mysql-sql-cache
 
-TODO: Write a gem description
+An ActiveRecord extension for enabling SQL\_CACHE and SQL\_NO\_CACHE in MySQL queries
+
+## Dependencies
+
+Supported versions:
+
+- Ruby 1.9+
+- ActiveRecord 4.0+ (Arel 4.0+)
 
 ## Installation
 
@@ -22,12 +29,39 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Methods that `#sql_cache` and `#sql_no_cache` are added into `ActiveRecord::Relation`.
 
-## Contributing
+```ruby
+class Product < ActiveRecord::Base
+end
 
-1. Fork it ( https://github.com/mirakui/activerecord-mysql-sql-cache/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Product.where(id: 1).to_sql
+# => SELECT `products`.`*` FROM `products` WHERE `id` = 1;
+
+Product.where(id: 1).sql_cache.to_sql
+# => SELECT SQL_CACHE `products`.`*` FROM `products` WHERE `id` = 1;
+
+Product.where(id: 1).sql_no_cache.to_sql
+# => SELECT SQL_NO_CACHE `products`.`*` FROM `products` WHERE `id` = 1;
+```
+
+`#sql_cache` accepts a boolean argument:
+
+```ruby
+# default: true
+Product.where(id: 1).sql_cache(true).to_sql
+# => SELECT SQL_CACHE `products`.`*` FROM `products` WHERE `id` = 1;
+
+Product.where(id: 1).sql_cache(false).to_sql
+# => SELECT SQL_NO_CACHE `products`.`*` FROM `products` WHERE `id` = 1;
+
+Product.where(id: 1).sql_cache(nil).to_sql
+# => SELECT `products`.`*` FROM `products` WHERE `id` = 1;
+```
+
+## License
+Arproxy is released under the MIT license:
+
+* www.opensource.org/licenses/MIT
+
+Copyright (c) 2015 Issei Naruta
