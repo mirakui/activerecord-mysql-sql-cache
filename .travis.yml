@@ -10,7 +10,6 @@ script: bundle exec rake spec
 before_script:
     - mysql -e 'create database ar_test;'
 gemfile:
-  - gemfiles/3.2.gemfile
   - gemfiles/4.0.gemfile
   - gemfiles/4.1.gemfile
   - gemfiles/4.2.gemfile
