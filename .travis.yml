@@ -1,14 +1,15 @@
 env:
   - mysql2://travis@127.0.0.1/ar_test
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.6
-  - 2.2.2
+  - 2.0
+  - 2.1
+  - 2.2
+  - 2.3
+  - ruby-head
 install: bundle install
 script: bundle exec rake spec
 before_script:
-    - mysql -e 'create database ar_test;'
+  - mysql -e 'create database ar_test;'
 gemfile:
   - gemfiles/4.0.gemfile
   - gemfiles/4.1.gemfile
